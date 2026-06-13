@@ -23,16 +23,17 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	real_position += mouse_offset
 	for child in get_children():
-		if child.name == "Water":
-			child.position = Vector2(
-				-64 + fposmod(real_position.x, 32.0),
-				-64 + fposmod(real_position.y, 36.0)
-			)
-		else:
-			child.position = Vector2(
-				-64 + real_position.x,
-				-64 + real_position.y
-			)
+		if child.is_in_group("Tiles"):
+			if child.name == "Water":
+				child.position = Vector2(
+					-64 + fposmod(real_position.x, 32.0),
+					-64 + fposmod(real_position.y, 36.0)
+				)
+			else:
+				child.position = Vector2(
+					-64 + real_position.x,
+					-64 + real_position.y
+				)
 	
 	@warning_ignore("int_as_enum_without_cast")
 	if Input.is_mouse_button_pressed(1):
@@ -47,13 +48,13 @@ func _process(_delta: float) -> void:
 		mouse_offset = (get_global_mouse_position() - mouse_placement) / scale
 		mouse_placement = get_global_mouse_position()
 
-func generate_noise() -> Array:
+func generate_noise(min,max) -> Array:
 	var ret = []
 	var current_line = []
 	for y in range(map_size.y):
 		current_line = []
 		for x in range(map_size.x):
-			current_line.append(randi_range(0,2))
+			current_line.append(randi_range(min,max))
 		ret.append(current_line)
 	return ret
 
@@ -71,50 +72,54 @@ func on_edge(x,y) -> bool:
 	
 	return r
 
-func get_return(noise,x,y) -> int:
-	var a = 0
-	var b = 0
-	var c = 0
+func get_return(noise,x,y, type) -> int:
+	if type == "noise":
+		var a = 0
+		var b = 0
+		var c = 0
+		
+		for ay in range(y-1,y+2):
+			for ax in range(x-1,x+1):
+				if on_edge(ax,ay):
+					match noise[ay][ax+1]:
+						0:
+							a+=1
+						1:
+							b+=1
+						2:
+							c+=1
+		if on_edge(x+1,y):
+					match noise[y][x+1]:
+						0:
+							a+=1
+						1:
+							b+=1
+						2:
+							c+=1
 	
-	for ay in range(y-1,y+2):
-		for ax in range(x-1,x+1):
-			if on_edge(ax,ay):
-				match noise[ay][ax+1]:
-					0:
-						a+=1
-					1:
-						b+=1
-					2:
-						c+=1
-	if on_edge(x+1,y):
-				match noise[y][x+1]:
-					0:
-						a+=1
-					1:
-						b+=1
-					2:
-						c+=1
-
-	if a>b and a>c:
-		return 0
-	if b>a and b>c:
+		if a>b and a>c:
+			return 0
+		if b>a and b>c:
+			return 1
+		if c>a and c>b:
+			return 2
 		return 1
-	if c>a and c>b:
-		return 2
 	return 1
 
-func smooth(noise: Array) -> Array:
+func smooth(noise: Array, type) -> Array:
 	for y in range(noise.size()):
 		for x in range(noise[0].size()):
-			noise[y][x] = get_return(noise,x,y)
+			noise[y][x] = get_return(noise,x,y,type)
 	return noise
 
 func create_map():
-	var noise = generate_noise()
+	var noise = generate_noise(0,2)
+	var biomes = generate_noise(0,4)
 	var current_line = []
 	
 	for i in range(GlobalTweaks.smoothness):
-		noise = smooth(noise)
+		noise = smooth(noise, "noise")
+		biomes = smooth(biomes, "biome")
 	
 	map_data = []
 	var current_item = {}
@@ -125,7 +130,7 @@ func create_map():
 			current_item["height"] = noise[y][x]
 			current_item["tile"] = randi_range(1,5)
 			current_item["sprite"] = current_item["tile"] + (current_item["height"] * 6)
-			current_item["rand_val"] = randi_range(0,1)
+			current_item["rand_val"] = randi_range(0,2)
 			
 			current_line.append(current_item)
 		map_data.append(current_line)
@@ -134,4 +139,5 @@ func print_map():
 	$Real.clear()
 	for y in range(map_size.y):
 		for x in range(map_size.x):
+			
 			$Real.set_cell(Vector2i(x,y),9,Vector2i(map_data[y][x].get("sprite"),0))
