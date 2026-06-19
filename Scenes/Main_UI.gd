@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+@export var bar: String
+
 @export var height: int
 @export var border: int
 @export var anchor: int
@@ -19,4 +21,5 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	if bar == "bottom":
+		$NinePatchRect/Label.text = str(GlobalTweaks.current_tile_num)
