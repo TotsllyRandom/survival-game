@@ -20,6 +20,6 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if bar == "bottom":
 		$NinePatchRect/Label.text = str(GlobalTweaks.current_tile_num)

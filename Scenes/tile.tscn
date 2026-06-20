@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://u3ttw434ya6x"]
+
+[ext_resource type="Script" uid="uid://bj5rgi4rueaia" path="res://Scripts/tileInstance.gd" id="1_4kj4d"]
+[ext_resource type="Texture2D" uid="uid://151mgrh0xy0s" path="res://Assets/Art/tileset.png" id="2_khers"]
+[ext_resource type="Texture2D" uid="uid://b1wi7mldp34nq" path="res://Assets/Art/placedOnAssets.png" id="3_g7l7l"]
+[ext_resource type="Shape2D" uid="uid://cmxdvuvffq5lt" path="res://Assets/Other/tileMouseCheck1.tres" id="4_khers"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_y55j6"]
+resource_name = "Main"
+texture = ExtResource("2_khers")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+9:0/0 = 0
+10:0/0 = 0
+11:0/0 = 0
+12:0/0 = 0
+13:0/0 = 0
+14:0/0 = 0
+15:0/0 = 0
+16:0/0 = 0
+17:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_1f6se"]
+tile_shape = 3
+tile_size = Vector2i(32, 24)
+sources/0 = SubResource("TileSetAtlasSource_y55j6")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_myvb2"]
+texture = ExtResource("3_g7l7l")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_8y4rn"]
+tile_shape = 3
+tile_size = Vector2i(32, 24)
+sources/0 = SubResource("TileSetAtlasSource_myvb2")
+
+[node name="Tile" type="Node2D" unique_id=1500154440 groups=["Tiles"]]
+script = ExtResource("1_4kj4d")
+metadata/_edit_group_ = true
+
+[node name="base" type="TileMapLayer" parent="." unique_id=280892896 groups=["Tiles"]]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(-16, -12)
+tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0)
+tile_set = SubResource("TileSet_1f6se")
+
+[node name="PlacedOn" type="TileMapLayer" parent="." unique_id=1852435051 groups=["Tiles"]]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(-16, -12)
+tile_set = SubResource("TileSet_8y4rn")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1516692955]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1774831391]
+shape = ExtResource("4_khers")
+
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]

@@ -206,8 +206,6 @@ func smooth_clumps(biomes: Array):
 	for clump in clumps:
 		while clump["amt"] > 7:
 			var rand_tile = Vector2i(randi_range(0,biomes[0].size()-1),randi_range(0,biomes.size()-1))
-			print(biomes[rand_tile.y][rand_tile.x])
-			print(clump["id"])
 			if biomes[rand_tile.y][rand_tile.x] == clump["id"]:
 				var n = get_neighbors(rand_tile)
 				var fixed = []
@@ -237,7 +235,6 @@ func create_map():
 	for clump in range(clumps.size()):
 		if clumps[clump]["amt"] == 0:
 			clumps.pop_at(clump)
-		print(clumps[clump])
 		clumps[clump]["tile"] = randi_range(0,GlobalTweaks.BIOMES.size()-1)
 
 	for i in range(GlobalTweaks.smoothness):
@@ -258,14 +255,13 @@ func create_map():
 			##if x == 0 or x == map_size.x - 1 or y == 0 or y == map_size.y -1:
 			##	clumps[current_item["clumpID"]]["tile"] = 0
 			current_item["tile"] = clumps[current_item["clumpID"]]["tile"]
-			if GlobalTweaks.BIOMES[current_item["tile"]]["placedOn"]:
-				current_item["placedOn"] = GlobalTweaks[current_item["tile"]]["placedOn"]
 			
 			current_item["number"] = choose_number()
 			
-			current_item["sprite"] = (current_item["tile"] + (current_item["height"] * 6))
+			current_item["sprite"] = ((current_item["tile"] * 3) + (current_item["height"]))
 			
 			current_item["rand_val"] = randi_range(0,2)
+			current_item["placedOn"] = GlobalTweaks.BIOMES[current_item["tile"]].get("placedOn", 0)
 			
 			current_line.append(current_item)
 
@@ -278,6 +274,7 @@ func choose_number() -> int:
 	for n in range(numbers.size()):
 		if numbers[n] < num:
 			lowest = [n+1]
+			num = numbers[n]
 		elif numbers[n] == num:
 			lowest.append(n+1)
 	

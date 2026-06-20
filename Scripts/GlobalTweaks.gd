@@ -1,6 +1,8 @@
 extends Node
 
 var current_tile_num = 0
+var real_position
+
 
 const BIOMES = [
 	
@@ -16,14 +18,16 @@ const BIOMES = [
 		"produce": [
 			"grain"
 		],
-		"min": 5
+		"min": 5,
+		"placedOn": 0
 	},
 	{
 		"name": "mine",
 		"produce": [
 			"ore"
 		],
-		"min": 5
+		"min": 5,
+		"placedOn": 0
 	},
 	{
 		"name": "pasture",
@@ -31,21 +35,23 @@ const BIOMES = [
 			"wool"
 		],
 		"min": 5,
-		##"placedOn": 
+		"placedOn": 1
 	},
 	{
 		"name": "mesa",
 		"produce": [
 			"brick"
 		],
-		"min": 5
+		"min": 5,
+		"placedOn": 0
 	},
 	{
 		"name": "forest",
 		"produce": [
 			"wood"
 		],
-		"min": 5
+		"min": 5,
+		"placedOn": 2,
 	},
 	
 ]
