@@ -27,7 +27,7 @@ const BIOMES = [
 			"ore"
 		],
 		"min": 5,
-		"placedOn": 0
+		"placedOn": 3
 	},
 	{
 		"name": "pasture",

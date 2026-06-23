@@ -5,6 +5,8 @@ var mouse_offset: Vector2
 var mouse_down: bool = false
 var real_position: Vector2
 
+var map_exists: bool = false
+
 ## copyables 
 var def_item = {
 	"tile": 0,
@@ -49,10 +51,22 @@ var map_size = Vector2(40,60)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	create_map()
-	print_map()
+	
+	var center_tile = Vector2i(
+		(map_size.x ) / 2,
+		(map_size.y) / 2
+	)
+	
+	var tile_pos = $Real.map_to_local(center_tile)
+	
+	real_position = - tile_pos + Vector2(64, 64)
+	map_exists = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	if map_exists:
+		print_map()
+	
 	real_position += mouse_offset
 	for child in get_children():
 		if child.is_in_group("Tiles"):
@@ -79,9 +93,14 @@ func _process(_delta: float) -> void:
 	if mouse_down:
 		mouse_offset = (get_global_mouse_position() - mouse_placement) / scale
 		mouse_placement = get_global_mouse_position()
-	var pos = $Real.local_to_map(get_global_mouse_position())
+	
+	var pos = $Real.local_to_map($Real.to_local(get_global_mouse_position()))
 	if on_edge(pos.x, pos.y):
-		GlobalTweaks.current_tile_num = map_data[pos.y][pos.x]["number"]
+		GlobalTweaks.current_tile_num = pos
+		
+		@warning_ignore("int_as_enum_without_cast")
+		if Input.is_action_just_pressed("Click"):
+			map_data[pos.y][pos.x]["placedOn"] = 4
 
 func generate_noise(mi,ma) -> Array:
 	var ret = []
@@ -94,11 +113,7 @@ func generate_noise(mi,ma) -> Array:
 	return ret
 
 func on_edge(x,y) -> bool:
-	var r = true
-	if x < 0 or x>=map_size.x - 1 or  y<0 or y>=map_size.y - 1:
-		r=false
-	
-	return r
+	return x >= 0 and x < map_size.x and y >= 0 and y < map_size.y
 
 func get_neighbors(pos: Vector2i) -> Array:
 	var ret = []
@@ -119,7 +134,7 @@ func get_neighbors(pos: Vector2i) -> Array:
 	return ret
 
 func append_if_okay(pos: Vector2i,ret: Array) -> Array:
-	if pos.x < 0 or pos.x>=map_size.x - 1 or pos.y<0 or pos.y>=map_size.y - 1:
+	if pos.x < 0 or pos.x >= map_size.x or pos.y < 0 or pos.y >= map_size.y:
 		return ret
 	ret.append(pos)
 	return ret
@@ -215,7 +230,8 @@ func smooth_clumps(biomes: Array):
 				if fixed.size() > 0:
 					var chosen = randi_range(0,fixed.size()-1)
 					biomes[rand_tile.y][rand_tile.x] = biomes[fixed[chosen].y][fixed[chosen].x]
-					clumps[chosen]["amt"] = clumps[chosen]["amt"] + 1
+					var target_clump = biomes[fixed[chosen].y][fixed[chosen].x]
+					clumps[target_clump]["amt"] += 1
 				else:
 					clumps.append(def_clump.duplicate())
 					clumps[clumps.size()-1]["id"] = clumps.size()-1
@@ -232,31 +248,41 @@ func create_map():
 	
 	biomes = smooth_clumps(biomes)
 	
-	for clump in range(clumps.size()):
+	for clump in range(clumps.size() - 1, -1, -1):
+		clumps[clump]["tile"] = randi_range(0,GlobalTweaks.BIOMES.size()-1)
 		if clumps[clump]["amt"] == 0:
 			clumps.pop_at(clump)
-		clumps[clump]["tile"] = randi_range(0,GlobalTweaks.BIOMES.size()-1)
 
 	for i in range(GlobalTweaks.smoothness):
 		noise = smooth(noise)
 
 	map_data = []
-
+	
+	clumps.append(def_clump.duplicate())
+	clumps[clumps.size()-1]["id"] = clumps[clumps.size()-1]["id"] + 1
+	clumps[clumps.size()-1]["amt"] = 1
+	clumps[clumps.size()-1]["tile"] = 5
+	
 	for y in range(map_size.y):
-
 		var current_line = []
-
+		
 		for x in range(map_size.x):
-			
 			var current_item = def_item.duplicate()
 			
+			if x == (map_size.x)/2 and y == (map_size.y)/2:
+				current_item["clumpID"] = clumps.size() -1
+				current_item["tile"] = 5
+			else:
+				current_item["clumpID"] = biomes[y][x]
+				current_item["tile"] = clumps[current_item["clumpID"]]["tile"]
+			
 			current_item["height"] = noise[y][x]
-			current_item["clumpID"] = biomes[y][x]
+			
 			##if x == 0 or x == map_size.x - 1 or y == 0 or y == map_size.y -1:
 			##	clumps[current_item["clumpID"]]["tile"] = 0
-			current_item["tile"] = clumps[current_item["clumpID"]]["tile"]
 			
 			current_item["number"] = choose_number()
+			numbers[current_item["number"] - 1] += 1
 			
 			current_item["sprite"] = ((current_item["tile"] * 3) + (current_item["height"]))
 			
@@ -264,8 +290,10 @@ func create_map():
 			current_item["placedOn"] = GlobalTweaks.BIOMES[current_item["tile"]].get("placedOn", 0)
 			
 			current_line.append(current_item)
-
+		
 		map_data.append(current_line)
+	
+	map_data[(map_size.y)/2][(map_size.x)/2]["placedOn"] = 4
 
 func choose_number() -> int:
 	var lowest = []
@@ -284,7 +312,7 @@ func print_map():
 	$Real.clear()
 	for y in range(map_size.y):
 		for x in range(map_size.x):
-			
+			$Real.set_cell(Vector2i(x,y),9,Vector2i(map_data[y][x].get("sprite"),0))
 			if map_data[y][x].get("placedOn") != 0:
 				$PlacedOn.set_cell(Vector2i(x,y),0,Vector2i(((map_data[y][x].get("placedOn") - 1) * 3) + (map_data[y][x].get("height")),0))
-			$Real.set_cell(Vector2i(x,y),9,Vector2i(map_data[y][x].get("sprite"),0))
+			
