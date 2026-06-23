@@ -156,19 +156,9 @@ tile_map_data = PackedByteArray("AAAAAAAACQAHAAAAAAAAAAEACQAHAAAAAAAAAAIACQAHAAA
 tile_set = SubResource("TileSet_wjtap")
 y_sort_origin = 1
 
-[node name="Top UI" parent="." unique_id=1967087963 instance=ExtResource("4_6whob")]
+[node name="UI" parent="." unique_id=733399845 instance=ExtResource("4_6whob")]
 offset = Vector2(10, 1510)
 scale = Vector2(4, 4)
 transform = Transform2D(4, 0, 0, 4, 10, 1510)
-bar = "top"
-height = 200
-border = 10
-
-[node name="Bottom UI" parent="." unique_id=733399845 instance=ExtResource("4_6whob")]
-offset = Vector2(10, 1510)
-scale = Vector2(4, 4)
-transform = Transform2D(4, 0, 0, 4, 10, 1510)
-bar = "bottom"
-height = 400
 border = 10
 anchor = 1

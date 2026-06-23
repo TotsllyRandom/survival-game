@@ -59,7 +59,7 @@ func _ready() -> void:
 	
 	var tile_pos = $Real.map_to_local(center_tile)
 	
-	real_position = - tile_pos + Vector2(64, 64)
+	real_position = - tile_pos + Vector2(64, 64) + ((get_viewport_rect().size/2)/scale)
 	map_exists = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -284,7 +284,7 @@ func create_map():
 			current_item["number"] = choose_number()
 			numbers[current_item["number"] - 1] += 1
 			
-			current_item["sprite"] = ((current_item["tile"] * 3) + (current_item["height"]))
+			current_item["sprite"] = ((current_item["tile"] * 3) + 1)
 			
 			current_item["rand_val"] = randi_range(0,2)
 			current_item["placedOn"] = GlobalTweaks.BIOMES[current_item["tile"]].get("placedOn", 0)
@@ -314,5 +314,5 @@ func print_map():
 		for x in range(map_size.x):
 			$Real.set_cell(Vector2i(x,y),9,Vector2i(map_data[y][x].get("sprite"),0))
 			if map_data[y][x].get("placedOn") != 0:
-				$PlacedOn.set_cell(Vector2i(x,y),0,Vector2i(((map_data[y][x].get("placedOn") - 1) * 3) + (map_data[y][x].get("height")),0))
+				$PlacedOn.set_cell(Vector2i(x,y),0,Vector2i((((map_data[y][x].get("placedOn") - 1) * 3) + 1),0))
 			

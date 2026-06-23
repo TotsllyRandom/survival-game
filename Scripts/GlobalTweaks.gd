@@ -56,6 +56,53 @@ const BIOMES = [
 	
 ]
 
+const PLACEABLES = [
+	{
+		"name": "sheep",
+	},
+	{
+		"name": "trees",
+	},
+	{
+		"name": "jagged stones",
+	},
+	{
+		"name": "hut",
+		"mult": 1,
+		"cost": {
+			"wood" : 10,
+			"brick" : 10,
+		},
+	},
+	{
+		"name": "barracks",
+		"mult": .5,
+		"cost": {
+			"wool" : 10,
+			"grain" : 10,
+			"wood" : 25,
+		},
+	},
+]
+
+const RESOURCES = [
+	{
+		"name": "wood",
+	},
+	{
+		"name": "brick",
+	},
+	{
+		"name": "wool",
+	},
+	{
+		"name": "ore",
+	},
+	{
+		"name": "grain",
+	},
+]
+
 ## Keep settings here that players can change that tweak world gen. This may go into a world gen seed?
 
 var smoothness = 5
