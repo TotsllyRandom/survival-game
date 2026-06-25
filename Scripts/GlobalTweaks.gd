@@ -19,7 +19,7 @@ const BIOMES = [
 			"grain"
 		],
 		"min": 5,
-		"placedOn": 0
+		"placedOn": 6
 	},
 	{
 		"name": "mine",
@@ -75,6 +75,14 @@ const PLACEABLES = [
 		},
 	},
 	{
+		"name": "village",
+		"mult": 2,
+		"cost": {
+			"wood" : 40,
+			"brick" : 50,
+		},
+	},
+	{
 		"name": "barracks",
 		"mult": .5,
 		"cost": {
@@ -84,6 +92,12 @@ const PLACEABLES = [
 		},
 	},
 ]
+
+func get_resource_from_name(name:String, array:Array):
+	for i in (array.size()):
+		if array[i].get("name") == name:
+			return i
+	return null
 
 const RESOURCES = [
 	{

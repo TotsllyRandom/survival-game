@@ -17,6 +17,7 @@ var def_item = {
 	"number": 0,
 	"suit": "",
 	"placedOn": 0,
+	"path": false,
 }
 
 var def_clump = {
@@ -100,7 +101,25 @@ func _process(_delta: float) -> void:
 		
 		@warning_ignore("int_as_enum_without_cast")
 		if Input.is_action_just_pressed("Click"):
-			map_data[pos.y][pos.x]["placedOn"] = 4
+			place_building(4,pos.x,pos.y)
+
+func place_building(building_id:int,x,y):
+	var resources = Player.resources.duplicate()
+	var required = GlobalTweaks.PLACEABLES[building_id].get("cost")
+	var can_place : bool = true
+	for item in required:
+		if not resources[GlobalTweaks.get_resource_from_name(item,resources)]["amount"] >= GlobalTweaks.PLACEABLES[building_id]["cost"][item]:
+			can_place = false
+	
+	
+	
+	if can_place:
+		for item in required:
+			resources[GlobalTweaks.get_resource_from_name(item,resources)]["amount"] -= GlobalTweaks.PLACEABLES[building_id]["cost"][item]
+		map_data[y][x]["placedOn"] = building_id
+		Player.resources = resources
+	
+	
 
 func generate_noise(mi,ma) -> Array:
 	var ret = []
@@ -294,6 +313,7 @@ func create_map():
 		map_data.append(current_line)
 	
 	map_data[(map_size.y)/2][(map_size.x)/2]["placedOn"] = 4
+	map_data[(map_size.y)/2][(map_size.x)/2]["path"] = true
 
 func choose_number() -> int:
 	var lowest = []
@@ -310,9 +330,13 @@ func choose_number() -> int:
 
 func print_map():
 	$Real.clear()
+	$Paths.clear()
+	$PlacedOn.clear()
 	for y in range(map_size.y):
 		for x in range(map_size.x):
 			$Real.set_cell(Vector2i(x,y),9,Vector2i(map_data[y][x].get("sprite"),0))
 			if map_data[y][x].get("placedOn") != 0:
 				$PlacedOn.set_cell(Vector2i(x,y),0,Vector2i((((map_data[y][x].get("placedOn") - 1) * 3) + 1),0))
+			if map_data[y][x].get("path"):
+				$Paths.set_cell(Vector2i(x,y),0,Vector2i(0,0))
 			

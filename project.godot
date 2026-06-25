@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GlobalTweaks="*uid://r2rd1ujb7hah"
+Player="*uid://d22d8e6twi12d"
 
 [display]
 
