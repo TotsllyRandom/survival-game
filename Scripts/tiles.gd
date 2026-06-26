@@ -7,6 +7,8 @@ var real_position: Vector2
 
 var map_exists: bool = false
 
+var mouse_press_pos:Vector2 = Vector2(-5000.0,5000.0)
+
 ## copyables 
 var def_item = {
 	"tile": 0,
@@ -95,13 +97,20 @@ func _process(_delta: float) -> void:
 		mouse_offset = (get_global_mouse_position() - mouse_placement) / scale
 		mouse_placement = get_global_mouse_position()
 	
+	if Input.is_action_pressed("Click") and mouse_press_pos == Vector2(-5000.0,5000.0):
+		mouse_press_pos = mouse_placement
+	
 	var pos = $Real.local_to_map($Real.to_local(get_global_mouse_position()))
 	if on_edge(pos.x, pos.y):
 		GlobalTweaks.current_tile_num = pos
 		
 		@warning_ignore("int_as_enum_without_cast")
-		if Input.is_action_just_pressed("Click"):
+		if Input.is_action_just_released("Click") and in_distance(mouse_press_pos.x,mouse_placement.x,20) and in_distance(mouse_press_pos.y,mouse_placement.y,20):
 			place_building(-1,pos.x,pos.y)
+			mouse_press_pos = Vector2(-5000.0,5000.0)
+
+func in_distance(item,target,range) -> bool:
+	return abs(item - target) <= range
 
 func place_building(building_id:int,x,y):
 	if map_data[y][x]["placedOn"] == building_id:
