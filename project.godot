@@ -10,10 +10,14 @@ config_version=5
 
 [application]
 
-config/name="SurvivalGame"
+config/name="Settlers"
+config/version="0.1.1"
 run/main_scene="res://Scenes/node_2d.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.21230495, 0.2123048, 0.21230477, 1)
+boot_splash/show_image=false
+boot_splash/image="uid://d0c52p6c40w45"
+config/icon="uid://cs6njry4x3gag"
 
 [autoload]
 
