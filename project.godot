@@ -36,7 +36,7 @@ window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg", "res://addons/ridiculous_coding/plugin.cfg")
+enabled=PackedStringArray("res://addons/FirebasePlugin/plugin.cfg", "res://addons/godot_super-wakatime/plugin.cfg", "res://addons/ridiculous_coding/plugin.cfg")
 
 [file_customization]
 
