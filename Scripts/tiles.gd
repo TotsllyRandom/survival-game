@@ -101,24 +101,46 @@ func _process(_delta: float) -> void:
 		
 		@warning_ignore("int_as_enum_without_cast")
 		if Input.is_action_just_pressed("Click"):
-			place_building(4,pos.x,pos.y)
+			place_building(-1,pos.x,pos.y)
 
 func place_building(building_id:int,x,y):
-	var resources = Player.resources.duplicate()
-	var required = GlobalTweaks.PLACEABLES[building_id].get("cost")
-	var can_place : bool = true
-	for item in required:
-		if not resources[GlobalTweaks.get_resource_from_name(item,resources)]["amount"] >= GlobalTweaks.PLACEABLES[building_id]["cost"][item]:
-			can_place = false
+	if map_data[y][x]["placedOn"] == building_id:
+		return false
+	if building_id > -1:
+		return false
+	elif building_id < -1:
 	
-	
-	
-	if can_place:
+		var resources = Player.resources.duplicate(true)
+		var required = GlobalTweaks.PLACEABLES[building_id].get("cost")
+		var can_place : bool = true
 		for item in required:
-			resources[GlobalTweaks.get_resource_from_name(item,resources)]["amount"] -= GlobalTweaks.PLACEABLES[building_id]["cost"][item]
-		map_data[y][x]["placedOn"] = building_id
-		Player.resources = resources
-	
+			if not resources[GlobalTweaks.get_resource_from_name(item,resources)]["amount"] >= GlobalTweaks.PLACEABLES[building_id]["cost"][item]:
+				can_place = false
+		
+		
+		
+		if can_place:
+			for item in required:
+				resources[GlobalTweaks.get_resource_from_name(item,resources)]["amount"] -= GlobalTweaks.PLACEABLES[building_id]["cost"][item]
+			map_data[y][x]["placedOn"] = building_id
+			Player.resources = resources
+	else:
+		if map_data[y][x]["path"] == true:
+			return false
+		var resources = Player.resources.duplicate(true)
+		var required = {}
+		var can_place : bool = true
+		for item in required:
+			if not resources[GlobalTweaks.get_resource_from_name(item,resources)]["amount"] >= GlobalTweaks.PLACEABLES[building_id]["cost"][item]:
+				can_place = false
+		
+		
+		
+		if can_place:
+			for item in required:
+				resources[GlobalTweaks.get_resource_from_name(item,resources)]["amount"] -= GlobalTweaks.PLACEABLES[building_id]["cost"][item]
+			map_data[y][x]["path"] = true
+			Player.resources = resources
 	
 
 func generate_noise(mi,ma) -> Array:
