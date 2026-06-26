@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://mkgr8si7ob0r"]
 
 [ext_resource type="Texture2D" uid="uid://bnuk8q1xlna2s" path="res://Assets/Art/UI.png" id="1_e8ccf"]
-[ext_resource type="Script" uid="uid://45erijfcwthd" path="res://Scenes/Main_UI.gd" id="1_vtdhj"]
+[ext_resource type="Script" uid="uid://45erijfcwthd" path="res://Scripts/Main_UI.gd" id="1_vtdhj"]
 
 [node name="MainUI" type="CanvasLayer" unique_id=1967087963]
 scale = Vector2(3, 3)
