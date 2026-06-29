@@ -24,6 +24,7 @@ config/icon="uid://cs6njry4x3gag"
 GlobalTweaks="*uid://r2rd1ujb7hah"
 Player="*uid://d22d8e6twi12d"
 SaveLoad="*uid://i6dkivuhcvlo"
+WorldBuilder="*uid://d0yg2ef6enbun"
 
 [display]
 

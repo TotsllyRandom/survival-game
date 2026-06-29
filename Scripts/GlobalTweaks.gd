@@ -3,6 +3,8 @@ extends Node
 var current_tile_num = 0
 var real_position
 
+var on_ui = false
+
 
 const BIOMES = [
 	

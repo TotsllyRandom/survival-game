@@ -28,5 +28,28 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	if GlobalTweaks.current_tile_num:
+		$Bottom/Control/HBoxContainer.visible = true
+		$Bottom/Control/Label.visible = false
+	else:
+		$Bottom/Control/HBoxContainer.visible = false
+		$Bottom/Control/Label.visible = true
 	$Bottom/Control/Label.text = str(GlobalTweaks.current_tile_num)
+	$Top/Control/Label2.text = str(GlobalTweaks.on_ui)
 	$Top/Control/Label.text = str((3600 - (roundi(Time.get_unix_time_from_system())%3600))/60)+":"+str((3600 - (roundi(Time.get_unix_time_from_system())%3600))%60).pad_zeros(2)
+
+
+func _on_path_pressed() -> void:
+	WorldBuilder.map_data[GlobalTweaks.current_tile_num.y][GlobalTweaks.current_tile_num.x]["path"] = true
+
+
+func _on_hut_pressed() -> void:
+	WorldBuilder.map_data[GlobalTweaks.current_tile_num.y][GlobalTweaks.current_tile_num.x]["placedOn"] = 4
+
+
+func _on_bottom_focus_entered() -> void:
+	GlobalTweaks.on_ui = true
+
+
+func _on_bottom_focus_exited() -> void:
+	GlobalTweaks.on_ui = false

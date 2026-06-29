@@ -21,9 +21,16 @@ patch_margin_right = 6
 patch_margin_bottom = 6
 
 [node name="Control" type="Control" parent="Bottom" unique_id=1685791545]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Label" type="Label" parent="Bottom/Control" unique_id=211230701]
 layout_mode = 1
@@ -32,8 +39,47 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Bottom/Control" unique_id=1976055018]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="path" type="Button" parent="Bottom/Control/HBoxContainer" unique_id=1956216998]
+layout_mode = 2
+mouse_filter = 1
+text = "Path"
+
+[node name="hut" type="Button" parent="Bottom/Control/HBoxContainer" unique_id=1170333318]
+layout_mode = 2
+mouse_filter = 1
+text = "Hut
+
+"
+
+[node name="Village" type="Button" parent="Bottom/Control/HBoxContainer" unique_id=1766128376]
+layout_mode = 2
+mouse_filter = 1
+text = "Village
+
+
+"
+
+[node name="clear" type="Button" parent="Bottom/Control/HBoxContainer" unique_id=762807176]
+layout_mode = 2
+mouse_filter = 1
+text = "clear
+
+"
 
 [node name="Top" type="NinePatchRect" parent="." unique_id=1644679074]
 offset_left = 7.667
@@ -59,4 +105,20 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Top/Control" unique_id=432436632]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+vertical_alignment = 1
+
+[connection signal="focus_entered" from="Bottom" to="." method="_on_bottom_focus_entered"]
+[connection signal="focus_exited" from="Bottom" to="." method="_on_bottom_focus_exited"]
+[connection signal="pressed" from="Bottom/Control/HBoxContainer/path" to="." method="_on_path_pressed"]
+[connection signal="pressed" from="Bottom/Control/HBoxContainer/hut" to="." method="_on_hut_pressed"]
