@@ -34,8 +34,7 @@ func _process(_delta: float) -> void:
 	else:
 		$Bottom/Control/HBoxContainer.visible = false
 		$Bottom/Control/Label.visible = true
-	$Bottom/Control/Label.text = str(GlobalTweaks.current_tile_num)
-	$Top/Control/Label2.text = str(GlobalTweaks.on_ui)
+	$Bottom/Control/Label.text = str("Click a tile to edit!")
 	$Top/Control/Label.text = str((3600 - (roundi(Time.get_unix_time_from_system())%3600))/60)+":"+str((3600 - (roundi(Time.get_unix_time_from_system())%3600))%60).pad_zeros(2)
 
 
@@ -47,9 +46,19 @@ func _on_hut_pressed() -> void:
 	WorldBuilder.map_data[GlobalTweaks.current_tile_num.y][GlobalTweaks.current_tile_num.x]["placedOn"] = 4
 
 
-func _on_bottom_focus_entered() -> void:
+
+func _on_bottom_mouse_entered() -> void:
 	GlobalTweaks.on_ui = true
 
 
-func _on_bottom_focus_exited() -> void:
+func _on_bottom_mouse_exited() -> void:
 	GlobalTweaks.on_ui = false
+
+
+func _on_village_pressed() -> void:
+	WorldBuilder.map_data[GlobalTweaks.current_tile_num.y][GlobalTweaks.current_tile_num.x]["placedOn"] = 5
+
+
+
+func _on_clear_pressed() -> void:
+	WorldBuilder.clear_tile(GlobalTweaks.current_tile_num.x,GlobalTweaks.current_tile_num.y)

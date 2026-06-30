@@ -93,6 +93,10 @@ func place_building(building_id:int,x,y):
 			Player.resources = resources
 	
 
+func clear_tile(x,y):
+	map_data[y][x]["path"] = false
+	map_data[y][x]["placedOn"] = GlobalTweaks.BIOMES[map_data[y][x]["tile"]].get("placedOn", 0)
+
 func generate_noise(mi,ma) -> Array:
 	var ret = []
 	var current_line = []
